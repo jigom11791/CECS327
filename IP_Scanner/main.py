@@ -1,3 +1,9 @@
 import socket
 
-print([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")])
+
+myIpAddress = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+print(myIpAddress)
+
+ips = ['192.168.0.11', '192.168.0.12', '192.168.0.1', '192.168.0.40', '192.168.0.50', '192.168.0.24', '192.168.0.32', '192.168.0.63', '192.168.0.25', '192.168.0.10', '192.168.0.67', '192.168.0.42', '192.168.0.16', '192.168.0.74', '192.168.0.18', '192.168.0.36', '192.168.0.87', '192.168.0.88', '192.168.0.26']
+ports = '80'
+
