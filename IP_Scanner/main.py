@@ -1,6 +1,8 @@
 import networkscan
 import socket
+import time
 
+start_time = time.time()
 myIpAddress = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
 print(myIpAddress)
 
@@ -21,6 +23,7 @@ def isOpen(ip, port):
 if __name__ == '__main__':
 
     # Define the network to scan
+    #this can change according to diferent networks
     my_network = "10.0.0.0/24"
 
     # Create the object
@@ -32,7 +35,7 @@ if __name__ == '__main__':
     for i in my_scan.list_of_hosts_found:
         counter = counter + 1
         if (isOpen(i, 80)):
-            print("port %d is open", i)
+            print("port %s is open" %(i))
 
-    print(counter)
+    print(time.time() - start_time)
 
