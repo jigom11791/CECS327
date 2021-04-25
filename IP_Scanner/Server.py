@@ -1,20 +1,12 @@
-from socket import *
+import socket
 
 
-class Server:
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((socket.gethostname(), 7159))
+s.listen(5)
 
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        self.s = socket(AF_INET, SOCK_STREAM)
-        self.s.bind((self.host, self.port))
-        (self.conn, self.addr) = self.s.accept()
-
-    def run(self):
-        while True:
-            data = self.conn.recv(1024)
-            if not data:
-                break
-            self.conn.send(str(data) + "*")
-        self.conn.close()
-
+while True:
+    clientsocket, address = s.accept()
+    print(f"Connection from {address} has been established!")
+    clientsocket.send(bytes("Welcome to the server!", "utf-8"))
+    clientsocket.close()
