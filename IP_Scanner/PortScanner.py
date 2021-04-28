@@ -3,8 +3,9 @@ import socket
 import ipaddress
 import threading
 
+FORMAT = 'utf-8'
 max_threads = 50
-final = []
+nodes = []
 
 
 def get_my_ip():
@@ -26,34 +27,26 @@ def get_ip_str():
 
 def check_port(ip, port):
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
+        s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(2.0) # seconds (float)
-        result = sock.connect_ex((ip, port))
+        result = s.connect_ex((ip, port))
         if result == 0:
-            # print ("Port is open")
-            final.append(ip)
-        # else:
-            # print ("Port is closed/filtered")
-            # final[ip] = "CLOSED"
-        sock.close()
+            s.send('0'.encode(FORMAT))
+            nodes.append(ip)
+        s.close()
     except:
         pass
 
 
-def check_ports():
-    port = 80
+def check_ports(port):
     ip_str = get_ip_str()
     for ip in ipaddress.IPv4Network(ip_str):
         threading.Thread(target=check_port, args=[str(ip), port]).start()
-        if len(final) != 0:
-            break
-        # sleep(0.1)
 
     # limit the number of threads.
     while threading.active_count() > max_threads:
         sleep(1)
 
-    print(final)
-    return final
+    print(nodes)
+    return nodes
 
