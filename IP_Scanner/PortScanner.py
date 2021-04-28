@@ -42,7 +42,7 @@ def check_port(ip, port):
 
 
 def check_ports():
-    port = 80
+    port = 7159
     ip_str = get_ip_str()
     for ip in ipaddress.IPv4Network(ip_str):
         threading.Thread(target=check_port, args=[str(ip), port]).start()

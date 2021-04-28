@@ -1,16 +1,31 @@
 import socket
+import logging
 
-s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s. connect((socket.gethostname(), 7159))
+ENC = 'utf-8'
 
-full_message = ''
+class Client:
 
-while True:
-    # 1024 is the data buffer
-    msg = s.recv(8)
-    if len(msg) <= 0:
-        break
-    else:
-        full_message += msg.decode("utf-8")
+    def __init__(self):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-print(full_message)
+    def greet(self, ip, port):
+        logging.info(f"[CLIENT] Connecting to server at {ip} using port {port}")
+        self.s.connect((ip, port))
+
+        msg = self.s.recv(1024).decode(ENC)
+        logging.info(f'[Client] Message received: {msg}')
+        self.s.close()
+
+    def request_nodes(self, ip, port):
+        nodes = []
+        self.s.connect((ip, port))
+        # idk what im doing. I'm thinking that i can send a number as a code for what to do
+        # code 1 will be for requesting the thing
+        msg = self.s.recv(1024).decode(ENC)
+        logging.info(f'[CLIENT] Message received: {msg}')
+        logging.info(f"[CLIENT] Requesting node list from {ip}")
+        self.s.send("1".encode(ENC))
+        logging.info("[CLIENT] Request Sent")
+
+        return nodes
+
