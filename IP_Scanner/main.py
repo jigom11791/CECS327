@@ -51,7 +51,7 @@ if __name__ == "__main__":
             logging.info("files")
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
-
+            
         add_nodes(comm_server.nodes)
 
 
