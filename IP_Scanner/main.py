@@ -3,6 +3,7 @@ import socket
 import PortScanner as ps
 import Client
 from Server import Server
+import hashing
 import threading
 import logging
 
@@ -10,6 +11,12 @@ COMM_PORT = 7159
 FILE_PORT = 7158
 NODES = []
 
+
+           # file = open("test.txt", "rb")
+           # hashing.add_to_dict(file)
+           # file2 = open("test.txt", "rb")
+           # print(hashing.checkSame(file2))
+           # print(hashing.dictionary_hash)
 
 def salute_nodes():
     if len(NODES) > 0:
@@ -54,7 +61,12 @@ if __name__ == "__main__":
             
         add_nodes(comm_server.nodes)
 
+
+
 # Comment to do
+
+
+
 #maybe put file name into dictionary or something
 # 1. Hashing function to find what files in the sync(master) folder
 #
