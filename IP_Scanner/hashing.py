@@ -15,31 +15,39 @@ import hashlib
 # acccount for if more than one file changed.
 
 dictionary_hash = {
-    "file_name": "hash"
 }
 
 
 def add_to_dict(file):
-    dictionary_hash["file_name"] = file
-    value = hash_file(file)
-    dictionary_hash["hash"] = value
-    print("ASODHSAD", dictionary_hash)
-
-
-# hashes the file
-def hash_file(file):
-    hash_md5 = hashlib.md5()
-    for chunk in iter(lambda: file.read(4096), b""):
-        hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+    value = hash_file1(file)
+    dictionary_hash[file] = value
 
 
 # CheckSame will return True if same , False if NOt same
 def check_same(file):
-    new_hash = hash_file(file)
-    print("NEW HASH", new_hash)
-    print("Dictionary hash is ", str(dictionary_hash["hash"]).strip("[]'"))
-    if new_hash == dictionary_hash.get("hash"):
+    new_hash = hash_file1(file)
+    if new_hash == dictionary_hash.get(file):
         return True
     else:
         return False
+
+
+def hash_file1(filename):
+   """"This function returns the SHA-1 hash
+   of the file passed into it"""
+
+   # make a hash object
+   h = hashlib.sha1()
+
+   # open file for reading in binary mode
+   with open(filename,'rb') as file:
+
+       # loop till the end of the file
+       chunk = 0
+       while chunk != b'':
+           # read only 1024 bytes at a time
+           chunk = file.read(1024)
+           h.update(chunk)
+
+   # return the hex representation of digest
+   return h.hexdigest()
