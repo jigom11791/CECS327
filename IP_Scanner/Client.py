@@ -27,9 +27,14 @@ def send_file(ip, port, filename):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((ip, port))
 
-    client.send(f'{filename}{SEP}{file_size}'.encode())
+    # Send message that it wants to send file
+    client.send('2'.encode(FORMAT))
+    msg = client.recv(SIZE).decode(FORMAT)
+    logging.info(f'[CLIENT] Message Received: {msg}')
+    # Send file name and file size
+    client.send(f"{filename}{SEP}{file_size}".encode())
 
-    file = open(filename, 'r')
+    file = open(filename, 'rb')
 
     while True:
         data = file.read(SIZE)

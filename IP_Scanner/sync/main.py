@@ -30,7 +30,7 @@ def add_nodes(nodes):
 
 def send_file():
     for node in NODES:
-        Client.send_file(node, FILE_PORT, 'test.txt')
+        Client.send_file(node, FILE_PORT, 'main.py')
 
 
 if __name__ == "__main__":

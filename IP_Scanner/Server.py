@@ -34,15 +34,21 @@ class Server:
         conn.send(bytes("Welcome to the server!", "utf-8"))
 
     def __receive_file__(self, conn):
-        filename, filesize = conn.recv(SIZE).decode().split(SEP)
+        conn.send(f'file transfer request received'.encode(FORMAT))
+        rec = conn.recv(SIZE).decode()
+        logging.info(f"{rec}")
+        filename, filesize = rec.split(SEP)
         filename = os.path.basename(filename)
         filesize = int(filesize)
-        logging.info(f'[SERVER] File name received {filename}{filesize}')
-        filename = "1" + filename
+        logging.info(f'[SERVER] File: {filename} {filesize}bytes')
+        filename = "sync/" + str(filename)
+        logging.info(f'{filename}')
         file = open(filename, "wb")
         while True:
+            logging.info("[SERVER] Getting Data")
             data = conn.recv(SIZE)
             if not data:
+                logging.info("[SERVER] Data transfer complete")
                 break
             file.write(data)
         file.close()
