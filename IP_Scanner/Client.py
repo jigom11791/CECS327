@@ -1,34 +1,42 @@
 import socket
 import logging
+import os
 
 FORMAT = 'utf-8'
+SIZE = 1024*4
+SEP = '<SEP>'
 
 
 def greet(ip, port):
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = s.connect_ex((ip, port))
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = client.connect_ex((ip, port))
         if result == 0:
             logging.info(f"[CLIENT] Connecting to server at {ip}")
-            s.send('0'.encode(FORMAT))
-            msg = s.recv(1024).decode(FORMAT)
+            client.send('0'.encode(FORMAT))
+            msg = client.recv(1024).decode(FORMAT)
             logging.info(f'[CLIENT] Message received: {msg}')
-        s.close()
+        client.close()
     except ConnectionError:
         pass
 
 
-def request_nodes(ip, port):
-    nodes = []
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip, port))
-    # idk what im doing. I'm thinking that i can send a number as a code for what to do
-    # code 1 will be for requesting the thing
-    msg = s.recv(1024).decode(FORMAT)
-    logging.info(f'[CLIENT] Message received: {msg}')
-    logging.info(f"[CLIENT] Requesting node list from {ip}")
-    s.send("1".encode(FORMAT))
-    logging.info(f"[CLIENT] Request Sent")
+def send_file(ip, port, filename):
+    file_size = os.path.getsize(filename)
+    logging.info(f'[CLIENT] connecting to file server.')
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((ip, port))
 
-    return nodes
+    client.send(f'{filename}{SEP}{file_size}'.encode())
+
+    file = open(filename, 'r')
+
+    while True:
+        data = file.read(SIZE)
+
+        if not data:
+            break
+        client.sendall(data)
+    client.close()
+
 

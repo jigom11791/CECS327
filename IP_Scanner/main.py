@@ -1,5 +1,3 @@
-import socket
-
 import PortScanner as ps
 import Client
 from Server import Server
@@ -37,6 +35,7 @@ if __name__ == "__main__":
     logging.info("[SERVER] starting server at port %d", FILE_PORT)
 
     add_nodes(ps.check_ports(COMM_PORT))
+
     while True:
         x = input('Enter Choice: ')
         if x == '0':
@@ -51,22 +50,13 @@ if __name__ == "__main__":
             logging.info("files")
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
-            
+
         add_nodes(comm_server.nodes)
 
-# Comment to do
-#maybe put file name into dictionary or something
-# 1. Hashing function to find what files in the sync(master) folder
-#
-# 2. Check if the file changed by redoing the hash / check if same
-        #or check if the modified file name is same
 
-#   3. send hash to server or client and then if same, do nothing
 
-#       if not the same, send file over
-#   4. well true loop:
-        #time interval to automatically check for files and check options
-#
-        
+
+
+
 
 

@@ -2,10 +2,8 @@ import socket
 import logging
 
 FORMAT = 'utf-8'
-
-
-def greet(clientsocket):
-    clientsocket.send(bytes("Welcome to the server!", "utf-8"))
+SIZE = 1024 * 4
+SEP = '<SEP>'
 
 
 class Server:
@@ -25,6 +23,21 @@ class Server:
             request = clientsocket.recv(1024).decode(FORMAT)
             logging.info(f'[SERVER] Request recieved: {request}')
             if request == '0':
-                greet(clientsocket)
+                self.__greet__(clientsocket)
+            if request == '2':
+                self.__receive_file__(clientsocket)
 
             clientsocket.close()
+
+    def __greet__(self, conn):
+        conn.send(bytes("Welcome to the server!", "utf-8"))
+
+    def __receive_file__(self, conn):
+        filename = conn.recv(SIZE).decode(FORMAT)
+        logging.info(f'[SERVER] File name received {filename}')
+
+        file = open(filename, 'w')
+
+        data = conn.recv(SIZE)
+        file.write(data)
+        file.close()
