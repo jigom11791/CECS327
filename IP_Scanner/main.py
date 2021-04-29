@@ -79,6 +79,17 @@ def file_listener():
         send_file_request(array)
 
 
+def beginning_check():
+    #cnvert dictionary to a list things
+    array = []
+    os.chdir("sync")  # Changed Directory to sync folder
+    for files, hash in hashing.dictionary_hash.items():
+        time_modified = os.path.getmtime(files)
+        array.append([files, hash, time_modified])
+    send_file_request(array)
+    os.chdir("..")
+ #   print("begining checks", array)
+
 
 
 if __name__ == "__main__":
@@ -100,6 +111,7 @@ if __name__ == "__main__":
     # Search for other nodes
     add_nodes(ps.check_ports(COMM_PORT))
     hash_files()
+    beginning_check()
     threading.Timer(60.0, file_listener).start() #request 1 minute!!!
 
     # Main loop for testing purposes.
