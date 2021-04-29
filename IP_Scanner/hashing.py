@@ -18,14 +18,15 @@ dictionary_hash = {
     "file_name": "hash"
 }
 
+
 def add_to_dict(file):
-    dictionary_hash["file_name"] = (file)
+    dictionary_hash["file_name"] = file
     value = hash_file(file)
     dictionary_hash["hash"] = value
     print("ASODHSAD", dictionary_hash)
 
 
-#hashs the file without using pythons
+# hashes the file
 def hash_file(file):
     hash_md5 = hashlib.md5()
     for chunk in iter(lambda: file.read(4096), b""):
@@ -33,12 +34,12 @@ def hash_file(file):
     return hash_md5.hexdigest()
 
 
-#CheckSame will return True if same , False if NOt same
-def checkSame(file):
-    newHash = hash_file(file)
-    print("NEW HASH", newHash)
+# CheckSame will return True if same , False if NOt same
+def check_same(file):
+    new_hash = hash_file(file)
+    print("NEW HASH", new_hash)
     print("Dictionary hash is ", str(dictionary_hash["hash"]).strip("[]'"))
-    if newHash == dictionary_hash.get("hash"):
+    if new_hash == dictionary_hash.get("hash"):
         return True
     else:
         return False
