@@ -4,6 +4,7 @@ from Server import Server
 import hashing
 import threading
 import logging
+import os
 
 COMM_PORT = 7159
 FILE_PORT = 7158
@@ -11,6 +12,7 @@ NODES = []
 
 
 # Mainly for testing purposes
+
 def salute_nodes():
     if len(NODES) > 0:
         for node in NODES:
@@ -35,17 +37,58 @@ def send_file_request(file_list):
 
 
 def hash_files():
+    os.chdir("sync") #Changed Directory to sync folder
+    for files in os.listdir(): #iterates through folder
+       hashing.add_to_dict(files) #hashes files and this function auto adds to dictionary
+    os.chdir("..")
     # find all the files in the sync folder and hash all
     # the files and add them to the dictionary
-    pass
 
 
 def check_changes():
-    # 1. check if any files have been added.
+    array = []
+    # 1. check if any files have been added.\
+    os.chdir("sync")  # Changed Directory to sync folder
+    for files in os.listdir():
+        if not hashing.check_same(files):
+            time_modified = os.path.getmtime(files)
+        #    print("time modified test ",  time_modified)
+         #   print("file name ", files)
+            array.append([files, hashing.hash_file1(files), time_modified])
+    store_changes(array)
+    os.chdir("..")
+  #  print("ARRAY IS ", array)
+    return array
+  #  print("ARRAY IS ", array)
     # 2. hash the files and check if any of them have changed
     # 3. return an array of arrays with that looks like:
     #       [[filename, hash, time_modified], [filename...]]
-    pass
+
+
+def store_changes(array):
+    for items in array:
+        hashing.dictionary_hash[items[0]] = items[1]
+
+
+def file_listener():
+    logging.info("hello in listener")
+    array = check_changes()
+    if array:
+        logging.info("files changed, starting request")
+        send_file_request(array)
+
+
+def beginning_check():
+    #cnvert dictionary to a list things
+    array = []
+    os.chdir("sync")  # Changed Directory to sync folder
+    for files, hash in hashing.dictionary_hash.items():
+        time_modified = os.path.getmtime(files)
+        array.append([files, hash, time_modified])
+    send_file_request(array)
+    os.chdir("..")
+ #   print("begining checks", array)
+
 
 
 if __name__ == "__main__":
@@ -66,6 +109,9 @@ if __name__ == "__main__":
 
     # Search for other nodes
     add_nodes(ps.check_ports(COMM_PORT))
+    hash_files()
+    beginning_check()
+    threading.Timer(60.0, file_listener).start() #request 1 minute!!!
 
     # Main loop for testing purposes.
     while True:
@@ -82,7 +128,8 @@ if __name__ == "__main__":
             send_file()
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
-
+        elif x == "4":
+            check_changes()
         add_nodes(comm_server.nodes)
 
 # Comment to do
