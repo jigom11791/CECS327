@@ -1,5 +1,6 @@
 import socket
 import logging
+import os
 
 FORMAT = 'utf-8'
 SIZE = 1024 * 4
@@ -33,11 +34,15 @@ class Server:
         conn.send(bytes("Welcome to the server!", "utf-8"))
 
     def __receive_file__(self, conn):
-        filename = conn.recv(SIZE).decode(FORMAT)
-        logging.info(f'[SERVER] File name received {filename}')
-
-        file = open(filename, 'w')
-
-        data = conn.recv(SIZE)
-        file.write(data)
+        filename, filesize = conn.recv(SIZE).decode().split(SEP)
+        filename = os.path.basename(filename)
+        filesize = int(filesize)
+        logging.info(f'[SERVER] File name received {filename}{filesize}')
+        filename = "1" + filename
+        file = open(filename, "wb")
+        while True:
+            data = conn.recv(SIZE)
+            if not data:
+                break
+            file.write(data)
         file.close()

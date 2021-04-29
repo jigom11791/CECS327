@@ -28,6 +28,11 @@ def add_nodes(nodes):
             NODES.append(node)
 
 
+def send_file():
+    for node in NODES:
+        Client.send_file(node, FILE_PORT, 'main.py')
+
+
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
@@ -54,7 +59,7 @@ if __name__ == "__main__":
             logging.info('request nodes')
         elif x == "2":
             # send file
-            logging.info("files")
+            send_file()
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
 
