@@ -25,9 +25,8 @@ def add_nodes(nodes):
 
 
 # Send a file to the other nodes
-def send_file():
-    for node in NODES:
-        Client.send_file(node, FILE_PORT, 'test.txt')
+def send_file(node):
+    Client.send_file(node, FILE_PORT, 'test.txt')
 
 
 def send_file_request(file_list):
