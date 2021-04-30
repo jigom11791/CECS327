@@ -1,6 +1,7 @@
 import socket
 import logging
 import os
+import hashing
 
 FORMAT = 'utf-8'
 SIZE = 1024 * 4
@@ -26,7 +27,7 @@ class Server:
             if request == '0':
                 self.__greet__(client_socket)
             elif request == '1':
-                self.__receive_file_requestA__(client_socket)
+                self.__receive_file_request__(client_socket)
             elif request == '2':
                 self.__receive_file__(client_socket)
 
@@ -56,9 +57,35 @@ class Server:
         file.close()
 
     def __receive_file_request__(self, conn):
-        file_name = conn.recv(SIZE).decode(FORMAT)
-        logging.info(f'[SERVER] Received message: {file_name}')
-        conn.send("file name received".encode(FORMAT))
-        file_hash = conn.recv(SIZE).decode(FORMAT)
-        logging.info(f'[SERVER] Received message: {file_hash}')
-        conn.send('file_hash received'.encode(FORMAT))
+        # Get filename
+        conn.send("starting file transfer request".encode(FORMAT))
+        received_message = conn.recv(SIZE).decode(FORMAT)
+        file_name, file_hash, edit_time = received_message.split(SEP)
+        logging.info(f'[SERVER] File name received: {file_name}')
+        logging.info(f'[SERVER] File hash received: {file_hash}')
+        logging.info(f'[SERVER] Edit time received: {edit_time}')
+        logging.info('[Server] Checking file')
+
+        time = os.path.getmtime(file_name)
+        logging.info(f'file in dict {file_name in hashing.dictionary_hash}')
+        if file_name in hashing.dictionary_hash:
+            logging.info(f'hash the same: {hashing.dictionary_hash[file_name] == file_hash}')
+            if hashing.dictionary_hash[file_name] == file_hash:
+                logging.info(f'{edit_time} > {time}: {float(edit_time) > time}')
+                if float(edit_time) > time:
+                    send_file = True
+                else:
+                    send_file = False
+            else:
+                send_file = False
+        else:
+            send_file = True
+
+        if not send_file:
+            logging.info(f'[SERVER] {file_name} is already up to date')
+            conn.send('0'.encode(FORMAT))
+        else:
+            logging.info(f'[SERVER] {file_name} needs to be updated')
+            conn.send('1'.encode(FORMAT))
+
+        conn.close()

@@ -48,21 +48,28 @@ def send_file(ip, port, filename):
         pass
 
 
-def send_file_request(ip, port, file_list):
+def send_file_request(ip, port, file):
     try:
+        # Create socket
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Establish connection
         result = client.connect_ex((ip, port))
         if result == 0:
-            for file in file_list:
-                client.send(file[0].encode(FORMAT))
-                msg = client.recv(SIZE).decode(FORMAT)
-                logging.info(f'[CLIENT]: Message received: {msg}')
-                client.send(file[1].enconde(FORMAT))
-
-        else:
-            pass
+            client.send('1'.encode(FORMAT))
+            msg = client.recv(SIZE).decode(FORMAT)
+            logging.info(f'[CLIENT] Message received: {msg}')
+            # send file name
+            msg = f'{file[0]}{SEP}{file[1]}{SEP}{file[2]}'
+            client.send(msg.encode(FORMAT))
+            send = client.recv(SIZE).decode()
+            client.close()
+            if bool(int(send)):
+                return True
+            else:
+                return False
         client.close()
+        return False
     except:
-        pass
+        return False
 
 
