@@ -23,8 +23,8 @@ def greet(ip, port):
 
 def send_file(ip, port, filename):
     try:
-        file_size = os.path.getsize(filename)
         logging.info(f'[CLIENT] connecting to file server.')
+        file_size = os.path.getsize(filename)
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = client.connect_ex((ip, port))
         if result == 0:

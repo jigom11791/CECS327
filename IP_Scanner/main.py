@@ -37,7 +37,7 @@ def send_file_request(file_list):
         for file in file_list:
             send = Client.send_file_request(node, COMM_PORT, file)
             if send:
-                send_file(node, file)
+                Client.send_file(node, file)
 
 
 def hash_files():
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
     while True:
         logging.info('Searching for nodes\n\n')
-        nodes = ps.check_ports()
+        nodes = ps.check_ports(COMM_PORT)
         if len(nodes) > 0:
             add_nodes(nodes)
             break

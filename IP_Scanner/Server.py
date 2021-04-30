@@ -2,6 +2,7 @@ import socket
 import logging
 import os
 import hashing
+import PortScanner as ps
 
 FORMAT = 'utf-8'
 SIZE = 1024 * 4
@@ -20,7 +21,7 @@ class Server:
         while True:
             client_socket, address = self.s.accept()
             logging.info(f"[SERVER] Connection from {address} has been established!")
-            if address not in self.nodes:
+            if address not in self.nodes and address != ps.IP:
                 self.nodes.append(address[0])
             request = client_socket.recv(1024).decode(FORMAT)
             logging.info(f'[SERVER] Request recieved: {request}')
@@ -44,7 +45,7 @@ class Server:
         filename = os.path.basename(filename)
         file_size = int(file_size)
         logging.info(f'[SERVER] File: {filename} {file_size}bytes')
-        filename = "sync/" + str(filename)
+        filename = str(filename)
         logging.info(f'{filename}')
         file = open(filename, "wb")
         while True:

@@ -9,9 +9,9 @@ nodes = []
 IP = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
 
 
-# def get_my_ip():
-#     my_ip_address = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
-#     return my_ip_address
+def get_my_ip():
+    my_ip_address = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+    return my_ip_address
 
 
 def get_ip_str():
