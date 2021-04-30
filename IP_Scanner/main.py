@@ -93,7 +93,7 @@ def beginning_check(): #sc
 
 def looper():
     threading.Timer(60.0, looper).start() #10 seconds
-    beginning_check()
+    file_listener()
 
 
 if __name__ == "__main__":
