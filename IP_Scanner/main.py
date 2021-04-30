@@ -78,7 +78,7 @@ def file_listener():
         send_file_request(array)
 
 
-def beginning_check():
+def beginning_check(): #sc
     #cnvert dictionary to a list things
     array = []
     os.chdir("sync")  # Changed Directory to sync folder
@@ -87,15 +87,19 @@ def beginning_check():
         array.append([files, hash, time_modified])
     send_file_request(array)
     os.chdir("..")
- #   print("begining checks", array)
+    print("IN HERE ")
+  #  s.enter(60, 1, beginning_check, (s,))
 
+
+def looper():
+    threading.Timer(60.0, looper).start() #10 seconds
+    beginning_check()
 
 
 if __name__ == "__main__":
     # Format for the logging messages
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-
     # Instantiate the servers
     comm_server = Server(COMM_PORT)
     data_server = Server(FILE_PORT)
@@ -111,9 +115,10 @@ if __name__ == "__main__":
     add_nodes(ps.check_ports(COMM_PORT))
     hash_files()
     beginning_check()
-    threading.Timer(60.0, file_listener).start() #request 1 minute!!!
 
+  #  beginning_check_no_timer()
     # Main loop for testing purposes.
+    looper()  # loops?
     while True:
         x = input('Enter Choice: ')
         if x == '0':
@@ -131,7 +136,9 @@ if __name__ == "__main__":
         elif x == "4":
             check_changes()
         add_nodes(comm_server.nodes)
-
+        #    s = sched.scheduler(time.time, time.sleep)  # scheduler for every minute
+        ##    s.enter(60, 1, beginning_check, (s,))
+        #    s.run()
 # Comment to do
 
 # maybe put file name into dictionary or something
