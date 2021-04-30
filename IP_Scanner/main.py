@@ -65,11 +65,12 @@ def store_changes(array):
 
 
 def file_listener():
-    logging.info("hello in listener")
     array = check_changes()
     if array:
-        logging.info("files changed, starting request")
+        logging.info("[FILE LISTENER] Files changed, starting request")
         send_file_request(array)
+    else:
+        logging.info("[FILE LISTENER] No changes in files")
 
 
 def beginning_check():
@@ -81,13 +82,19 @@ def beginning_check():
         array.append([files, hash, time_modified])
     send_file_request(array)
     os.chdir("..")
+    print("IN HERE ")
+  #  s.enter(60, 1, beginning_check, (s,))
+
+
+def looper():
+    threading.Timer(60.0, looper).start() #10 seconds
+    file_listener()
 
 
 if __name__ == "__main__":
     # Format for the logging messages
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-
     # Instantiate the servers
     comm_server = Server(COMM_PORT)
     data_server = Server(FILE_PORT)
@@ -103,4 +110,41 @@ if __name__ == "__main__":
     add_nodes(ps.check_ports(COMM_PORT))
     hash_files()
     beginning_check()
-    threading.Timer(60.0, file_listener).start()
+
+  #  beginning_check_no_timer()
+    # Main loop for testing purposes.
+    looper()  # loops?
+    while True:
+        x = input('Enter Choice: ')
+        if x == '0':
+            # salute
+            logging.info('salute nodes')
+            salute_nodes()
+        elif x == '1':
+            # request nodes
+            logging.info('request nodes')
+        elif x == "2":
+            # send file
+            send_file()
+        elif x == "3":
+            logging.info(f"Nodes: {NODES} ")
+        elif x == "4":
+            check_changes()
+        add_nodes(comm_server.nodes)
+        #    s = sched.scheduler(time.time, time.sleep)  # scheduler for every minute
+        ##    s.enter(60, 1, beginning_check, (s,))
+        #    s.run()
+# Comment to do
+
+# maybe put file name into dictionary or something
+# 1. Hashing function to find what files in the sync(master) folder
+#
+# 2. Check if the file changed by redoing the hash / check if same
+    # or check if the modified file name is same
+
+
+
+
+
+
+
