@@ -61,23 +61,24 @@ class Server:
         conn.send("starting file transfer request".encode(FORMAT))
         received_message = conn.recv(SIZE).decode(FORMAT)
         file_name, file_hash, edit_time = received_message.split(SEP)
-        logging.info(f'[SERVER] File name received: {file_name}')
-        logging.info(f'[SERVER] File hash received: {file_hash}')
-        logging.info(f'[SERVER] Edit time received: {edit_time}')
-        logging.info('[Server] Checking file')
+        # logging.info(f'[SERVER] File name received: {file_name}')
+        # logging.info(f'[SERVER] File hash received: {file_hash}')
+        # logging.info(f'[SERVER] Edit time received: {edit_time}')
+        # logging.info('[Server] Checking file')
 
-        time = os.path.getmtime(file_name)
         logging.info(f'file in dict {file_name in hashing.dictionary_hash}')
         if file_name in hashing.dictionary_hash:
             logging.info(f'hash the same: {hashing.dictionary_hash[file_name] == file_hash}')
             if hashing.dictionary_hash[file_name] == file_hash:
+                logging.info(os.path.abspath(os.path.curdir))
+                time = os.path.getmtime(str(file_name))
                 logging.info(f'{edit_time} > {time}: {float(edit_time) > time}')
                 if float(edit_time) > time:
                     send_file = True
                 else:
                     send_file = False
             else:
-                send_file = False
+                send_file = True
         else:
             send_file = True
 
@@ -87,5 +88,3 @@ class Server:
         else:
             logging.info(f'[SERVER] {file_name} needs to be updated')
             conn.send('1'.encode(FORMAT))
-
-        conn.close()

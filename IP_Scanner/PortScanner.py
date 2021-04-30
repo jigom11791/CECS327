@@ -6,15 +6,16 @@ import threading
 FORMAT = 'utf-8'
 max_threads = 50
 nodes = []
+IP = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
 
 
-def get_my_ip():
-    my_ip_address = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
-    return my_ip_address
+# def get_my_ip():
+#     my_ip_address = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+#     return my_ip_address
 
 
 def get_ip_str():
-    ip = get_my_ip()
+    ip = IP
     counter = 0
     for i in range(len(ip)):
         if ip[i] == '.':
@@ -30,7 +31,7 @@ def check_port(ip, port):
         s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(2.0) # seconds (float)
         result = s.connect_ex((ip, port))
-        if result == 0:
+        if result == 0 and ip != :
             s.send('0'.encode(FORMAT))
             nodes.append(ip)
         s.close()

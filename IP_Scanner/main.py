@@ -33,6 +33,7 @@ def send_file(node, file):
 
 def send_file_request(file_list):
     for node in NODES:
+        print(node)
         for file in file_list:
             send = Client.send_file_request(node, COMM_PORT, file)
             if send:
@@ -40,22 +41,22 @@ def send_file_request(file_list):
 
 
 def hash_files():
-    os.chdir("sync")  # Changed Directory to sync folder
+    # os.chdir("sync")  # Changed Directory to sync folder
     for files in os.listdir():  # iterates through folder
        hashing.add_to_dict(files)  # hashes files and this function auto adds to dictionary
-    os.chdir("..")
+    # os.chdir("..")
 
 
 def check_changes():
     array = []
     # 1. check if any files have been added.
-    os.chdir("sync")  # Changed Directory to sync folder
+    # os.chdir("sync")  # Changed Directory to sync folder
     for files in os.listdir():
         if not hashing.check_same(files):
             time_modified = os.path.getmtime(files)
             array.append([files, hashing.hash_file1(files), time_modified])
     store_changes(array)
-    os.chdir("..")
+    # os.chdir("..")
     return array
 
 
@@ -76,22 +77,23 @@ def file_listener():
 def beginning_check():
     # convert dictionary to a list things
     array = []
-    os.chdir("sync")  # Changed Directory to sync folder
+    # os.chdir("sync")  # Changed Directory to sync folder
     for files, hash in hashing.dictionary_hash.items():
         time_modified = os.path.getmtime(files)
         array.append([files, hash, time_modified])
     send_file_request(array)
-    os.chdir("..")
+    # os.chdir("..")
     print("IN HERE ")
   #  s.enter(60, 1, beginning_check, (s,))
 
 
 def looper():
-    threading.Timer(60.0, looper).start() #10 seconds
+    threading.Timer(6.0, looper).start() #10 seconds
     file_listener()
 
 
 if __name__ == "__main__":
+    os.chdir('sync')
     # Format for the logging messages
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
@@ -125,22 +127,12 @@ if __name__ == "__main__":
             logging.info('request nodes')
         elif x == "2":
             # send file
-            send_file()
+            send_file(NODES[0], 'test.txt')
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
         elif x == "4":
             check_changes()
         add_nodes(comm_server.nodes)
-        #    s = sched.scheduler(time.time, time.sleep)  # scheduler for every minute
-        ##    s.enter(60, 1, beginning_check, (s,))
-        #    s.run()
-# Comment to do
-
-# maybe put file name into dictionary or something
-# 1. Hashing function to find what files in the sync(master) folder
-#
-# 2. Check if the file changed by redoing the hash / check if same
-    # or check if the modified file name is same
 
 
 

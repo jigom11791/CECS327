@@ -63,6 +63,7 @@ def send_file_request(ip, port, file):
             client.send(msg.encode(FORMAT))
             send = client.recv(SIZE).decode()
             client.close()
+            logging.info(f'[CLIENT] Message Received: {send}\n\n')
             if bool(int(send)):
                 return True
             else:
