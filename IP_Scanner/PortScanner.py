@@ -29,9 +29,9 @@ def get_ip_str():
 def check_port(ip, port):
     try:
         s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket.setdefaulttimeout(2.0) # seconds (float)
+        socket.setdefaulttimeout(2.0)  # seconds (float)
         result = s.connect_ex((ip, port))
-        if result == 0 and ip != :
+        if result == 0 and ip != IP:
             s.send('0'.encode(FORMAT))
             nodes.append(ip)
         s.close()

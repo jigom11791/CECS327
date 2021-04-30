@@ -108,8 +108,13 @@ if __name__ == "__main__":
     file_thread.start()
     logging.info("[SERVER] starting server at port %d", FILE_PORT)
 
+    while True:
+        logging.info('Searching for nodes\n\n')
+        nodes = ps.check_ports()
+        if len(nodes) > 0:
+            add_nodes(nodes)
+            break
     # Search for other nodes
-    add_nodes(ps.check_ports(COMM_PORT))
     hash_files()
     beginning_check()
 
