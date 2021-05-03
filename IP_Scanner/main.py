@@ -11,6 +11,7 @@ COMM_PORT = 7159
 FILE_PORT = 7158
 NODES = []
 
+
 # Function salute_nodes mainly used for testing if
 # nodes talk to each other.
 # will greet each other if connection is established.
@@ -55,30 +56,31 @@ def hash_files():
 def check_changes():
     array = []
     # os.chdir("sync")  # Changed Directory to sync folder
-    for files in os.listdir(): #iterates through folder
-        if not hashing.check_same(files): #check if hashing are same and if not
-            time_modified = os.path.getmtime(files) #get time modifed
-            array.append([files, hashing.hash_file(files), time_modified]) #adds hashing of file and the time modified to an array
-    store_changes(array) #stores the array
+    for files in os.listdir():  # iterates through folder
+        if not hashing.check_same(files):  # check if hashing are same and if not
+            time_modified = os.path.getmtime(files)  # get time modifed
+            # adds hashing of file and the time modified to an array
+            array.append([files, hashing.hash_file(files), time_modified])
+    store_changes(array)  # stores the array
     # os.chdir("..")
-    return array #returns the array for further processing
+    return array  # returns the array for further processing
 
 
 # Function store_changes takes in an array and then stores the new hash if
 # changes to the file are made into the dictionary
 def store_changes(array):
-    for items in array: #iterates through item being passed
-        hashing.dictionary_hash[items[0]] = items[1] #adds to dictionary
+    for items in array:  # iterates through item being passed
+        hashing.dictionary_hash[items[0]] = items[1]  # adds to dictionary
 
 
 # Function file_listener checks if files have changed and if changed, sends a request to other nodes
 # if not, it produces a msg that no changes were made.
 def file_listener():
-    array = check_changes() #calls check_changes function
-    if array: #checks if files have changed
+    array = check_changes()  # calls check_changes function
+    if array:  # checks if files have changed
         logging.info("[FILE LISTENER] Files changed, starting request")
-        send_file_request(array) #sends a request to fix change
-    else: #else do nothing because file did not change.
+        send_file_request(array) # sends a request to fix change
+    else:  # else do nothing because file did not change.
         logging.info("[FILE LISTENER] No changes in files")
 
 
@@ -88,17 +90,18 @@ def beginning_check():
     # convert dictionary to a list things
     array = []
     # os.chdir("sync")  # Changed Directory to sync folder
-    for files, hash in hashing.dictionary_hash.items(): #iterates through dictionary
-        time_modified = os.path.getmtime(files) #get time modfiied
-        array.append([files, hash, time_modified]) #appends to array
-    send_file_request(array) #sends request to change files
+    for files, hash in hashing.dictionary_hash.items():  # iterates through dictionary
+        time_modified = os.path.getmtime(files)  # get time modfiied
+        array.append([files, hash, time_modified])  # appends to array
+    send_file_request(array)  # sends request to change files
     # os.chdir("..")
 
 
 # Function Looper loops through file_listener function every 6 seconds to check if the files are the same throughout
 def looper():
-    threading.Timer(30.0, looper).start() #utilizing threading timer function to start looping this method every 30 seconds
-    file_listener() # when function loops, this function is called
+    # utilizing threading timer function to start looping this method every 30 seconds
+    threading.Timer(30.0, looper).start()
+    file_listener()  # when function loops, this function is called
 
 
 if __name__ == "__main__":
@@ -124,8 +127,8 @@ if __name__ == "__main__":
             add_nodes(nodes)
             break
     # Search for other nodes
-    hash_files() #calls initial hash to hash all files
-    beginning_check() #runs beginning checks on program to see if any changes are made.
+    hash_files()  # calls initial hash to hash all files
+    beginning_check()  # runs beginning checks on program to see if any changes are made.
     looper()  # runs function in the background every 30 seconds to check for changed files.
     # Main loop
     while True:
@@ -143,6 +146,6 @@ if __name__ == "__main__":
         elif x == "3":
             logging.info(f"Nodes: {NODES} ")
         elif x == "4":
-            #check for changes
+            # check for changes
             check_changes()
         add_nodes(comm_server.nodes)
