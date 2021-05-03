@@ -54,7 +54,7 @@ def check_changes():
     for files in os.listdir():
         if not hashing.check_same(files):
             time_modified = os.path.getmtime(files)
-            array.append([files, hashing.hash_file1(files), time_modified])
+            array.append([files, hashing.hash_file(files), time_modified])
     store_changes(array)
     # os.chdir("..")
     return array
