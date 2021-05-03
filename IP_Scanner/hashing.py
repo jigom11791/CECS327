@@ -8,7 +8,7 @@ dictionary_hash = {
 #stores into dictionary
 def add_to_dict(file):
     value = hash_file(file) #use hash function and stores it in value
-    dictionary_hash[file] = value #adds to dictionary 
+    dictionary_hash[file] = value #adds to dictionary
 
 
 # CheckSame Function will return True if both files are the same
