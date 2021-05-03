@@ -37,7 +37,7 @@ def send_file_request(file_list):
         for file in file_list:
             send = Client.send_file_request(node, COMM_PORT, file)
             if send:
-                Client.send_file(node, file)
+                send_file(node, file[0])
 
 
 def hash_files():
@@ -118,9 +118,9 @@ if __name__ == "__main__":
     hash_files()
     beginning_check()
 
-  #  beginning_check_no_timer()
-    # Main loop for testing purposes.
+    #  beginning_check_no_timer()
     looper()  # loops?
+    # Main loop for testing purposes.
     while True:
         x = input('Enter Choice: ')
         if x == '0':
