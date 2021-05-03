@@ -11,7 +11,7 @@ COMM_PORT = 7159
 FILE_PORT = 7158
 NODES = []
 
-# function salute_nodes mainly used for testing if
+# Function salute_nodes mainly used for testing if
 # nodes talk to each other.
 # will greet each other if connection is established.
 def salute_nodes():
@@ -82,6 +82,8 @@ def file_listener():
         logging.info("[FILE LISTENER] No changes in files")
 
 
+# Function beginning_check does all the inital tasks like converting our dictionary into a list
+# then sends a request to change files if something does not match the master's set
 def beginning_check():
     # convert dictionary to a list things
     array = []
@@ -91,7 +93,7 @@ def beginning_check():
         array.append([files, hash, time_modified]) #appends to array
     send_file_request(array) #sends request to change files
     # os.chdir("..")
-  #  s.enter(60, 1, beginning_check, (s,))
+
 
 # Function Looper loops through file_listener function every 6 seconds to check if the files are the same throughout
 def looper():
@@ -144,10 +146,3 @@ if __name__ == "__main__":
             #check for changes
             check_changes()
         add_nodes(comm_server.nodes)
-
-
-
-
-
-
-
