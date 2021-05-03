@@ -7,18 +7,18 @@ dictionary_hash = {
 #hashs file using our own hashing method
 #stores into dictionary
 def add_to_dict(file):
-    value = hash_file(file)
-    dictionary_hash[file] = value
+    value = hash_file(file) #use hash function and stores it in value
+    dictionary_hash[file] = value #adds to dictionary 
 
 
 # CheckSame Function will return True if both files are the same
 # False if files are not the same in the dictionary
 def check_same(file):
-    new_hash = hash_file(file)
-    if new_hash == dictionary_hash.get(file):
-        return True
+    new_hash = hash_file(file) #creates a new hash for the file being tested
+    if new_hash == dictionary_hash.get(file): #checks the dictionary for any files that match the hash
+        return True #if found, returns true
     else:
-        return False
+        return False #else, false.
 
 # Hash_file Function takes in a file and then returns the SHA-1 hash
 def hash_file(filename):

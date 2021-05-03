@@ -10,7 +10,6 @@ COMM_PORT = 7159
 FILE_PORT = 7158
 NODES = []
 
-
 # Mainly for testing purposes
 
 def salute_nodes():
